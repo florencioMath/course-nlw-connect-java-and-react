@@ -3,6 +3,7 @@ package com.florenciomath.nlw_connect.events.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.florenciomath.nlw_connect.dto.SubscriptionResponse;
 import com.florenciomath.nlw_connect.events.model.Event;
 import com.florenciomath.nlw_connect.events.model.Subscription;
 import com.florenciomath.nlw_connect.events.model.User;
@@ -24,7 +25,7 @@ public class SubscriptionService {
 	@Autowired
 	private SubscriptionRepository subRepository;
 
-	public Subscription createNewSubscription(String eventName, User user) {
+	public SubscriptionResponse createNewSubscription(String eventName, User user) {
 		
 		Event evt = evtRepository.findByPrettyName(eventName);
 		
@@ -35,7 +36,7 @@ public class SubscriptionService {
 		User userRec = userRepository.findByEmail(user.getEmail());
 		
 		if (userRec == null) {
-			user = userRepository.save(userRec);			
+			user = userRepository.save(user);			
 		}
 		
 		Subscription subs = new Subscription();
@@ -48,8 +49,8 @@ public class SubscriptionService {
 	     }
 		
 		
-		Subscription res = subRepository.save(subs);
-		return res;
+		 Subscription res = subRepository.save(subs);
+	     return new SubscriptionResponse(res.getSubscriptionNumber(), "http://codecraft.com/subscription/"+res.getEvent().getPrettyName()+"/"+res.getSubscriber().getId());
 	}
 
 }
