@@ -3,7 +3,6 @@ package com.florenciomath.nlw_connect.events.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.florenciomath.nlw_connect.dto.SubscriptionConflictException;
 import com.florenciomath.nlw_connect.events.model.Event;
 import com.florenciomath.nlw_connect.events.model.Subscription;
 import com.florenciomath.nlw_connect.events.model.User;
@@ -11,6 +10,7 @@ import com.florenciomath.nlw_connect.events.repository.EventRepository;
 import com.florenciomath.nlw_connect.events.repository.SubscriptionRepository;
 import com.florenciomath.nlw_connect.events.repository.UserRepository;
 import com.florenciomath.nlw_connect.exception.EventNotFoundException;
+import com.florenciomath.nlw_connect.exception.SubscriptionConflictException;
 
 @Service
 public class SubscriptionService {

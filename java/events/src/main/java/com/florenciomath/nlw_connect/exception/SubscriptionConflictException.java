@@ -1,4 +1,4 @@
-package com.florenciomath.nlw_connect.dto;
+package com.florenciomath.nlw_connect.exception;
 
 public class SubscriptionConflictException extends RuntimeException{
 	
