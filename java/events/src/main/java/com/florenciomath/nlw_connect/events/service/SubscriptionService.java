@@ -9,6 +9,7 @@ import com.florenciomath.nlw_connect.events.model.User;
 import com.florenciomath.nlw_connect.events.repository.EventRepository;
 import com.florenciomath.nlw_connect.events.repository.SubscriptionRepository;
 import com.florenciomath.nlw_connect.events.repository.UserRepository;
+import com.florenciomath.nlw_connect.exception.EventNotFoundException;
 
 @Service
 public class SubscriptionService {
@@ -25,6 +26,11 @@ public class SubscriptionService {
 	public Subscription createNewSubscription(String eventName, User user) {
 		
 		Event evt = evtRepository.findByPrettyName(eventName);
+		
+		if (evt == null) {
+			throw new EventNotFoundException("Evento " + eventName + " não existe");
+		}
+		
 		User userRec = userRepository.findByEmail(user.getEmail());
 		
 		if (userRec == null) {

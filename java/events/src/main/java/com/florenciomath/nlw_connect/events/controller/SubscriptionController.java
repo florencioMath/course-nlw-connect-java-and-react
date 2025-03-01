@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.florenciomath.nlw_connect.dto.ErrorMessage;
 import com.florenciomath.nlw_connect.events.model.Subscription;
 import com.florenciomath.nlw_connect.events.model.User;
 import com.florenciomath.nlw_connect.events.service.SubscriptionService;
+import com.florenciomath.nlw_connect.exception.EventNotFoundException;
 
 @RestController
 public class SubscriptionController {
@@ -18,10 +20,15 @@ public class SubscriptionController {
 	private SubscriptionService service;
 	
 	@PostMapping("/subscription/{prettyName}")
-	public ResponseEntity<Subscription> createSubscription(@PathVariable String prettyName, @RequestBody User subscriber) {
-		Subscription res = service.createNewSubscription(prettyName, subscriber);
-		if (res != null) {
-			return ResponseEntity.ok(res);
+	public ResponseEntity<?> createSubscription(@PathVariable String prettyName, @RequestBody User subscriber) {
+		try {
+			Subscription res = service.createNewSubscription(prettyName, subscriber);
+			if (res != null) {
+				return ResponseEntity.ok(res);
+			}
+			
+		} catch (EventNotFoundException ex) {
+			return ResponseEntity.status(404).body(new ErrorMessage(ex.getMessage()));
 		}
 		return ResponseEntity.badRequest().build();
 	}
