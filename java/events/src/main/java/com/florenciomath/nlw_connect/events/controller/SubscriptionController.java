@@ -13,6 +13,7 @@ import com.florenciomath.nlw_connect.events.model.User;
 import com.florenciomath.nlw_connect.events.service.SubscriptionService;
 import com.florenciomath.nlw_connect.exception.EventNotFoundException;
 import com.florenciomath.nlw_connect.exception.SubscriptionConflictException;
+import com.florenciomath.nlw_connect.exception.UserIndicadorNotFoundException;
 
 @RestController
 public class SubscriptionController {
@@ -20,10 +21,12 @@ public class SubscriptionController {
 	@Autowired
 	private SubscriptionService service;
 	
-	@PostMapping("/subscription/{prettyName}")
-	public ResponseEntity<?> createSubscription(@PathVariable String prettyName, @RequestBody User subscriber) {
+	@PostMapping({"/subscription/{prettyName}", "/subscription/{prettyName}/{userId}"})
+	public ResponseEntity<?> createSubscription(@PathVariable String prettyName,
+												@RequestBody User subscriber,
+												@PathVariable(required = false) Integer userId) {
 		try {
-			SubscriptionResponse res = service.createNewSubscription(prettyName, subscriber);
+			SubscriptionResponse res = service.createNewSubscription(prettyName, subscriber, userId);
 			if (res != null) {
 				return ResponseEntity.ok(res);
 			}
@@ -32,6 +35,8 @@ public class SubscriptionController {
 			return ResponseEntity.status(404).body(new ErrorMessage(ex.getMessage()));
 		} catch (SubscriptionConflictException ex) {
 			return ResponseEntity.status(409).body(new ErrorMessage(ex.getMessage()));
+		} catch (UserIndicadorNotFoundException ex) {
+			return ResponseEntity.status(404).body(new ErrorMessage(ex.getMessage()));
 		}
 		return ResponseEntity.badRequest().build();
 	}

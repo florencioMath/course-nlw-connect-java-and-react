@@ -12,6 +12,7 @@ import com.florenciomath.nlw_connect.events.repository.SubscriptionRepository;
 import com.florenciomath.nlw_connect.events.repository.UserRepository;
 import com.florenciomath.nlw_connect.exception.EventNotFoundException;
 import com.florenciomath.nlw_connect.exception.SubscriptionConflictException;
+import com.florenciomath.nlw_connect.exception.UserIndicadorNotFoundException;
 
 @Service
 public class SubscriptionService {
@@ -25,23 +26,27 @@ public class SubscriptionService {
 	@Autowired
 	private SubscriptionRepository subRepository;
 
-	public SubscriptionResponse createNewSubscription(String eventName, User user) {
+	public SubscriptionResponse createNewSubscription(String eventName, User user, Integer userId) {
 		
 		Event evt = evtRepository.findByPrettyName(eventName);
-		
 		if (evt == null) {
 			throw new EventNotFoundException("Evento " + eventName + " não existe");
 		}
 		
 		User userRec = userRepository.findByEmail(user.getEmail());
-		
 		if (userRec == null) {
-			user = userRepository.save(user);			
+			userRec = userRepository.save(user);			
+		}
+		
+		User indicador = userRepository.findById(userId).orElse(null);
+		if (indicador == null) {
+			throw new UserIndicadorNotFoundException("Usuário " + userId + " não existe");
 		}
 		
 		Subscription subs = new Subscription();
 		subs.setEvent(evt);
 		subs.setSubscriber(userRec);
+		subs.setIndication(indicador);
 		
 		Subscription tmbSub = subRepository.findByEventAndSubscriber(evt, userRec);
 		 if(tmbSub != null){
