@@ -3,6 +3,7 @@ package com.florenciomath.nlw_connect.events.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.florenciomath.nlw_connect.dto.SubscriptionConflictException;
 import com.florenciomath.nlw_connect.events.model.Event;
 import com.florenciomath.nlw_connect.events.model.Subscription;
 import com.florenciomath.nlw_connect.events.model.User;
@@ -40,6 +41,11 @@ public class SubscriptionService {
 		Subscription subs = new Subscription();
 		subs.setEvent(evt);
 		subs.setSubscriber(userRec);
+		
+		Subscription tmbSub = subRepository.findByEventAndSubscriber(evt, userRec);
+		 if(tmbSub != null){
+			 throw new SubscriptionConflictException("Já existe incrição para o usuário " + userRec.getName() + " no evento " + evt.getTitle());
+	     }
 		
 		
 		Subscription res = subRepository.save(subs);

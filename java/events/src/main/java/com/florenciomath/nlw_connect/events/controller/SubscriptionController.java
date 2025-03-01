@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.florenciomath.nlw_connect.dto.ErrorMessage;
+import com.florenciomath.nlw_connect.dto.SubscriptionConflictException;
 import com.florenciomath.nlw_connect.events.model.Subscription;
 import com.florenciomath.nlw_connect.events.model.User;
 import com.florenciomath.nlw_connect.events.service.SubscriptionService;
@@ -29,6 +30,8 @@ public class SubscriptionController {
 			
 		} catch (EventNotFoundException ex) {
 			return ResponseEntity.status(404).body(new ErrorMessage(ex.getMessage()));
+		} catch (SubscriptionConflictException ex) {
+			return ResponseEntity.status(409).body(new ErrorMessage(ex.getMessage()));
 		}
 		return ResponseEntity.badRequest().build();
 	}
