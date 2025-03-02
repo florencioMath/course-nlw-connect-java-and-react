@@ -38,9 +38,12 @@ public class SubscriptionService {
 			userRec = userRepository.save(user);			
 		}
 		
-		User indicador = userRepository.findById(userId).orElse(null);
-		if (indicador == null) {
-			throw new UserIndicadorNotFoundException("Usuário " + userId + " não existe");
+		User indicador = null;
+		if (userId != null) {
+			indicador = userRepository.findById(userId).orElse(null);
+			if (indicador == null) {
+				throw new UserIndicadorNotFoundException("Usuário " + userId + " não existe");
+			}
 		}
 		
 		Subscription subs = new Subscription();
