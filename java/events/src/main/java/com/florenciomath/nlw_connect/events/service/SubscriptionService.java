@@ -1,8 +1,11 @@
 package com.florenciomath.nlw_connect.events.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.florenciomath.nlw_connect.dto.SubscriptionRankingItem;
 import com.florenciomath.nlw_connect.dto.SubscriptionResponse;
 import com.florenciomath.nlw_connect.events.model.Event;
 import com.florenciomath.nlw_connect.events.model.Subscription;
@@ -61,4 +64,12 @@ public class SubscriptionService {
 	     return new SubscriptionResponse(res.getSubscriptionNumber(), "http://codecraft.com/subscription/"+res.getEvent().getPrettyName()+"/"+res.getSubscriber().getId());
 	}
 
+	public List<SubscriptionRankingItem> getCompleteRanking(String prettyName) {
+		Event evt = evtRepository.findByPrettyName(prettyName);
+		if (evt == null) {
+			throw new EventNotFoundException(prettyName);
+		}
+		
+		return subRepository.generateRanking(evt.getEventId());
+	}
 }
