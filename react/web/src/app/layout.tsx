@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { Montserrat, Oxanium } from 'next/font/google';
 
 export const metadata: Metadata = {
-  title: 'devstagep',
+  title: 'devstage',
 };
 
 const oxanium = Oxanium({
@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${oxanium.variable} ${montserrat.variable}`}>
-      <body>{children}</body>
+      <body className="bg-gray-900 text-gray-100 antialiased">{children}</body>
     </html>
   );
 }
